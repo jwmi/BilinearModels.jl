@@ -1,8 +1,11 @@
 module BilinearModels
 
-using SpecialFunctions
+import SpecialFunctions
+import TSVD
 
-f(x) = logabsgamma(x)[1]
+f(x) = SpecialFunctions.logabsgamma(x)[1]
+
+g(A,k) = TSVD.tsvd(A,k)
 
 
 end # module
