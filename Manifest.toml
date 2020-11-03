@@ -1,5 +1,11 @@
 # This file is machine-generated - editing it directly is not advised
 
+[[Adapt]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "42c42f2221906892ceb765dbcb1a51deeffd86d7"
+uuid = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
+version = "2.3.0"
+
 [[Artifacts]]
 deps = ["Pkg"]
 git-tree-sha1 = "c30985d8821e0cd73870b17b0ed0ce6dc44cb744"
@@ -38,6 +44,10 @@ uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
 
 [[Libdl]]
 uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
+
+[[LinearAlgebra]]
+deps = ["Libdl"]
+uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 
 [[Logging]]
 uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
@@ -82,6 +92,12 @@ deps = ["OpenSpecFun_jll"]
 git-tree-sha1 = "d8d8b8a9f4119829410ecd706da4cc8594a1e020"
 uuid = "276daf66-3868-5448-9aa4-cd146d93841b"
 version = "0.10.3"
+
+[[TSVD]]
+deps = ["Adapt", "LinearAlgebra"]
+git-tree-sha1 = "f7a801257cfb820d91f3f8de355fe4c70659e77c"
+uuid = "9449cd9e-2762-5aa3-a617-5413e99d722e"
+version = "0.4.1"
 
 [[Test]]
 deps = ["Distributed", "InteractiveUtils", "Logging", "Random"]

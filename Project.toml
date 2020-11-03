@@ -5,4 +5,5 @@ version = "0.1.0"
 
 [deps]
 SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
+TSVD = "9449cd9e-2762-5aa3-a617-5413e99d722e"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
