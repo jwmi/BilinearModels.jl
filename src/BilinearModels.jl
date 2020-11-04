@@ -1,11 +1,15 @@
 module BilinearModels
 
-import SpecialFunctions
-import TSVD
 
-f(x) = SpecialFunctions.logabsgamma(x)[1]
+include("fit.jl"); using .Fit
+include("infer.jl"); using .Infer
+include("common.jl"); using .Common
+include("outcome_nb.jl"); using .Outcome_NB
 
-g(A,k) = TSVD.tsvd(A,k)
 
 
-end # module
+
+end # module BilinearModels
+
+
+
