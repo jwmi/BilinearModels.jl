@@ -9,7 +9,8 @@ module Outcome_NB
 
 export compute_MuWE!, loglikelihood, compute_logdispersion_derivatives, update_logdispersions
 
-using SpecialFunctions: logabsgamma
+using Statistics: mean
+using SpecialFunctions: logabsgamma, digamma, trigamma
 lgamma_(x) = logabsgamma(x)[1]
 
 

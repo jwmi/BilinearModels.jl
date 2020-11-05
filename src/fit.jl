@@ -7,10 +7,11 @@
 
 module Fit
 
-export fit
+export fit, fit_leastsquares
 
 import TSVD
-using LinearAlgebra: norm, pinv
+using Statistics: mean
+using LinearAlgebra: norm, pinv, rank
 import LinearAlgebra
 Identity = LinearAlgebra.I
 
@@ -97,7 +98,7 @@ function fit(Y,X,Z,M; max_iterations=50, tolerance=1e-6, max_step=5.0, verbose=t
     # Initialize
     if isempty(init_params)
         # Initialize A,B,C by minimizing the sum-of-squared residuals
-        A,B,C = recover_parameters(log.(Y.+0.125)-Offset,X,Z,M; ABC_only=true)  # first we only the A,B,C terms to avoid overfitting in the UDV' term
+        A,B,C = fit_leastsquares(log.(Y.+0.125)-Offset,X,Z,M; ABC_only=true)  # first we only the A,B,C terms to avoid overfitting in the UDV' term
         
         U,D,V = TSVD.tsvd(1e-8*randn(I,J),M)  # randomly initialize UDV' to something random and negligible (this is to avoid numerical issues due to zeros)
         Mu = exp.(X*A' + B*Z' + X*C*Z' + U*(D.*V') + Offset)
@@ -199,7 +200,7 @@ end
 # Functions for estimation in NB-GBM
 
 # Recover A, B, C, D, U, and V, given logMu, X, Z, and M.
-function recover_parameters(logMu,X,Z,M; ABC_only=false)
+function fit_leastsquares(logMu,X,Z,M; ABC_only=false)
     Q = pinv(X)*logMu
     C = Q*pinv(Z)'
     A = (Q - C*Z')'
@@ -287,7 +288,13 @@ function update_UD(A,C,U,D,V,X,Z,pinv_X,pinv_Z,W,E,lambda_U,max_step,verbose)
     pinv_Z_Ao = pinv_Z*Ao
     A = Ao - Z*pinv_Z_Ao
     C = C + pinv_Z_Ao'
-    U,D,V = TSVD.tsvd(Go*V',M)
+	try
+		U,D,V = TSVD.tsvd(Go*V',M)
+	catch
+		println("TSVD failure:")
+		println(Go*V')
+		error("TSVD failure")
+	end
     return A,C,U,D,V
 end
 
