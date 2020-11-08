@@ -9,6 +9,7 @@
 BilinearModels is a Julia package for estimation and inference in generalized bilinear models. 
 
 Please cite the following publication if you use this package in your research:
+> J. W. Miller and S. L. Carter, **Inference in generalized bilinear models**. [(arXiv preprint arXiv:2010.04896)](https://arxiv.org/abs/2010.04896), 2020.
 
 
 ## Installation
@@ -34,8 +35,7 @@ This package is released under the MIT "Expat" license. See [LICENSE.md](LICENSE
 
 
 
-## References
-
-> J. W. Miller and S. L. Carter, **Inference in generalized bilinear models**. *(arXiv preprint arXiv:2010.04896)*, 2020. [(link)](https://arxiv.org/abs/2010.04896)
-
+<!--## References
+> J. W. Miller and S. L. Carter, **Inference in generalized bilinear models**. [(arXiv preprint arXiv:2010.04896)](https://arxiv.org/abs/2010.04896), 2020.
+-->
 
