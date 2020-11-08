@@ -1,3 +1,9 @@
+# Unit tests for GBM functions
+#
+# Author: Jeffrey W. Miller
+# Date: 11/7/2020
+#
+# This file is released under the MIT "Expat" License.
 
 using Test
 using BilinearModels
