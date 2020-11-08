@@ -9,6 +9,7 @@ module Infer
 
 export infer
 
+using LinearAlgebra: diag
 import LinearAlgebra
 Identity = LinearAlgebra.I
 Diagonal = LinearAlgebra.Diagonal
@@ -139,7 +140,7 @@ function infer(Y,X,Z,A,B,C,D,U,V,S,T,omega; prior=Prior(), Offset=0.0*Y)
         var_C_from_A = compute_var_C_from_A(X,Z,F_A_inv,F_C_inv,grad_C,dW_dMu_Mu,dE_dMu_Mu)
         var_C_from_B = compute_var_C_from_B(X,Z,F_B_inv,F_C_inv,grad_C,dW_dMu_Mu,dE_dMu_Mu)
         var_C_approx = diag(F_C_inv) + var_C_from_A + var_C_from_B
-		
+        
     else
     
         # For testing purposes, compute the full Fisher information matrix
@@ -258,6 +259,18 @@ end
 
 # __________________________________________________________________________________________________
 # Functions for inference in NB-GBM
+
+# Compute X'*diag(w)*X and store it in XtWX
+function compute_XtWX!(XtWX,X,w)
+    I,K = size(X)
+    for k1 = 1:K, k2 = 1:K
+        value = 0.0
+        for i = 1:I
+            value += X[i,k1]*w[i]*X[i,k2]
+        end
+        XtWX[k1,k2] = value
+    end
+end
 
 function compute_F_D(U,V,W)
     I,M = size(U)

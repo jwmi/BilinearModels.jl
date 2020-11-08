@@ -63,7 +63,7 @@ include("outcome_nb.jl"); using .Outcome_NB
 #    M = number of latent factors
 #
 function fit(Y,X,Z,M; max_iterations=50, tolerance=1e-6, max_step=5.0, verbose=true, prior=Prior(), init_params=(), Offset=0.0*Y, update_S=true, update_T=true)
-	# Define dimensions and parameters
+    # Define dimensions and parameters
     I,K = size(X)
     J,L = size(Z)
     A = zeros(J,K)
@@ -76,7 +76,7 @@ function fit(Y,X,Z,M; max_iterations=50, tolerance=1e-6, max_step=5.0, verbose=t
     T = zeros(J,1)
     omega = 0.0
     
-	# Define auxiliary values
+    # Define auxiliary values
     Mu = zeros(I,J)
     W = zeros(I,J)
     E = zeros(I,J)
@@ -85,13 +85,10 @@ function fit(Y,X,Z,M; max_iterations=50, tolerance=1e-6, max_step=5.0, verbose=t
     b_T = max_step*ones(J)
     p = prior
     
-	# Check dimensions
-    @assert(K > 0)
-    @assert(L > 0)
-    @assert(M >= 0)
-    @assert(M < min(I,J))
+    # Check dimensions and constraints
+    validate_inputs(Y,X,Z,M)
     
-	# Precompute pseudoinverses for X and Z
+    # Precompute pseudoinverses for X and Z
     pinv_Z = pinv(Z)
     pinv_X = pinv(X)
     
@@ -151,7 +148,7 @@ function fit(Y,X,Z,M; max_iterations=50, tolerance=1e-6, max_step=5.0, verbose=t
             # Update D
             compute_MuWE!(Mu,W,E,Y,logMu,r)
             logMu = logMu - U*(D.*V')
-			D,U,V = update_D(D,U,V,W,E,p.lambda_D,max_step)
+            D,U,V = update_D(D,U,V,W,E,p.lambda_D,max_step)
             logMu = logMu + U*(D.*V')
         end
         
@@ -189,6 +186,9 @@ function fit(Y,X,Z,M; max_iterations=50, tolerance=1e-6, max_step=5.0, verbose=t
     shift = log(mean(exp.(T)))
     T = T .- shift
     omega = omega + shift
+    
+    # Check constraints
+    validate_outputs(Y,X,Z,A,B,C,D,U,V,S,T)
     
     return A,B,C,D,U,V,S,T,omega,logp
 end
@@ -288,26 +288,20 @@ function update_UD(A,C,U,D,V,X,Z,pinv_X,pinv_Z,W,E,lambda_U,max_step,verbose)
     pinv_Z_Ao = pinv_Z*Ao
     A = Ao - Z*pinv_Z_Ao
     C = C + pinv_Z_Ao'
-	try
-		U,D,V = TSVD.tsvd(Go*V',M)
-	catch
-		println("TSVD failure:")
-		println(Go*V')
-		error("TSVD failure")
-	end
+    U,D,V = TSVD.tsvd(Go*V',M)
     return A,C,U,D,V
 end
 
-# Update D		
+# Update D      
 function update_D(D,U,V,W,E,lambda_D,max_step)
-	M = length(D)
-	F_D = [sum((U[:,m1].*U[:,m2]).*W.*(V[:,m1].*V[:,m2])') for m1=1:M, m2=1:M]
-	# F_D = compute_F_D(U,V,W)
-	grad_D = vec(sum((U'*E).*V',dims=2))
-	delta = (F_D + Identity*lambda_D) \ (grad_D - lambda_D*D)
-	D = D + delta*min(sqrt(M)*max_step/norm(delta), 1)
-	o = sortperm(D; rev=true); D = D[o]; U = U[:,o]; V = V[:,o]
-	return D,U,V
+    M = length(D)
+    F_D = [sum((U[:,m1].*U[:,m2]).*W.*(V[:,m1].*V[:,m2])') for m1=1:M, m2=1:M]
+    # F_D = compute_F_D(U,V,W)
+    grad_D = vec(sum((U'*E).*V',dims=2))
+    delta = (F_D + Identity*lambda_D) \ (grad_D - lambda_D*D)
+    D = D + delta*min(sqrt(M)*max_step/norm(delta), 1)
+    o = sortperm(D; rev=true); D = D[o]; U = U[:,o]; V = V[:,o]
+    return D,U,V
 end
 
 

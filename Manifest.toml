@@ -206,9 +206,9 @@ uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 
 [[TSVD]]
 deps = ["Adapt", "LinearAlgebra"]
-git-tree-sha1 = "f7a801257cfb820d91f3f8de355fe4c70659e77c"
+git-tree-sha1 = "8e1d43e8e3a079024943108b3b6105c721997b58"
 uuid = "9449cd9e-2762-5aa3-a617-5413e99d722e"
-version = "0.4.1"
+version = "0.4.2"
 
 [[Test]]
 deps = ["Distributed", "InteractiveUtils", "Logging", "Random"]
