@@ -16,7 +16,6 @@ rms(x) = sqrt(mean(x.^2))
 relative_mse(x,y) = mean((x-y).^2) / mean(y.^2)
 
 
-if false
 
 @testset "fit_leastsquares" begin
     logMu = [1 2 3; 4 5 6; 7 8 0]
@@ -202,6 +201,7 @@ end
     @test (try GBM.validate_inputs(Y,X,Z1,M); false; catch; true; end)
 end
 
+if false
 
 @testset "validate_outputs" begin
     Y = [19  6   69  143
@@ -233,7 +233,6 @@ end
     @test (try GBM.validate_outputs(Y,X,Z,A,B,C,D,U,V,S,T.+0.1); false; catch; true; end)
 end
 
-end
 
 
 @testset "Sums of squares & residuals" begin
@@ -287,7 +286,7 @@ end
 
 
 
-
+end
 
 
 

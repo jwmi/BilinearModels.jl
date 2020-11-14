@@ -7,14 +7,32 @@
 
 module Common
 
-export SS, logprior, Prior, validate_inputs, validate_outputs, sum_of_squares, residuals
-
+export SS, logprior, Prior, validate_inputs, validate_outputs, sum_of_squares, residuals, tsvd
 
 using Distributions
-
+import PROPACK
 using LinearAlgebra: svdvals
 import LinearAlgebra
 Identity = LinearAlgebra.I
+
+include("outcome_nb.jl"); using .Outcome_NB
+
+
+# Wrapper for tsvd function in PROPACK.  Re-tries multiple times if errors occur, and suppresses standard output.
+function tsvd(A; k=1, trynum=1, maxtries=5)
+    if trynum == maxtries
+        U,D,V,bnd,nprod,ntprod = PROPACK.tsvd(A; k=k)
+    else
+        try
+            U,D,V,bnd,nprod,ntprod = PROPACK.tsvd(A; k=k)
+            return U,D,V
+        catch
+        end
+        U,D,V = tsvd(A; k=k, trynum=trynum+1, maxtries=maxtries)
+    end
+    return U,D,V
+end
+
 
 # Sum of squares
 SS(A) = sum(A.*A)
@@ -97,11 +115,15 @@ end
 #    rx = indices of X covariates to retain in residuals (do not adjust them out)
 #    rz = indices of Z covariates to retain in residuals (do not adjust them out)
 #    ru = indices of latent factors to retain in residuals (do not adjust them out)
-function residuals(Y,X,Z,A,B,C,D,U,V; rx=[], rz=[], ru=[])
+function residuals(Y,X,Z,A,B,C,D,U,V,S,T,omega; rx=[], rz=[], ru=[])
     logMu = X*A' + B*Z' + X*C*Z' + U*(D.*V')
     logMu_retain = X[:,rx]*A[:,rx]' + B[:,rz]*Z[:,rz]' + X[:,rx]*C[rx,rz]*Z[:,rz]' + U[:,ru]*(D[ru].*V[:,ru]')
     Eps = log.(Y .+ 0.125) .- logMu
-    return logMu_retain .+ Eps
+    Eps_R = logMu_retain .+ Eps
+    r = exp.(-(S .+ T' .+ omega))
+    Mu,W,E = compute_MuWE(Y,logMu,r)
+    Sigma = 1.0./sqrt.(W)
+    return Eps_R,Sigma
 end
 
 

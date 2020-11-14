@@ -9,7 +9,6 @@ module Fit
 
 export fit, fit_leastsquares
 
-import TSVD
 using Statistics: mean
 using LinearAlgebra: norm, pinv, rank
 import LinearAlgebra
@@ -97,7 +96,7 @@ function fit(Y,X,Z,M; max_iterations=50, tolerance=1e-6, max_step=5.0, verbose=t
         # Initialize A,B,C by minimizing the sum-of-squared residuals
         A,B,C = fit_leastsquares(log.(Y.+0.125)-Offset,X,Z,M; ABC_only=true)  # first we only the A,B,C terms to avoid overfitting in the UDV' term
         
-        U,D,V = TSVD.tsvd(1e-8*randn(I,J),M)  # randomly initialize UDV' to something random and negligible (this is to avoid numerical issues due to zeros)
+        U,D,V = tsvd(1e-8*randn(I,J); k=M)  # randomly initialize UDV' to something random and negligible (to avoid numerical issues due to zeros)
         Mu = exp.(X*A' + B*Z' + X*C*Z' + U*(D.*V') + Offset)
         r = exp.(-(S .+ T' .+ omega))
         for iter = 1:4
@@ -161,7 +160,7 @@ function fit(Y,X,Z,M; max_iterations=50, tolerance=1e-6, max_step=5.0, verbose=t
             @warn("NaN's detected")
         end
         if (rank(U)<M) || (rank(V)<M)
-            @warn("TSVD failure leading to insufficient rank.")
+            @warn("Truncated SVD failure leading to insufficient rank.")
         end
         
         # Check for convergence
@@ -207,7 +206,7 @@ function fit_leastsquares(logMu,X,Z,M; ABC_only=false)
     B = logMu*pinv(Z)' - X*C
     if ABC_only; return A,B,C; end
     UDVt = logMu - (X*A' + B*Z' + X*C*Z')
-    U,D,V = TSVD.tsvd(UDVt,M)
+    U,D,V = tsvd(UDVt; k=M)
     return A,B,C,D,U,V
 end
 
@@ -288,7 +287,7 @@ function update_UD(A,C,U,D,V,X,Z,pinv_X,pinv_Z,W,E,lambda_U,max_step,verbose)
     pinv_Z_Ao = pinv_Z*Ao
     A = Ao - Z*pinv_Z_Ao
     C = C + pinv_Z_Ao'
-    U,D,V = TSVD.tsvd(Go*V',M)
+    U,D,V = tsvd(Go*V'; k=M)
     return A,C,U,D,V
 end
 

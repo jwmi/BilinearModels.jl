@@ -7,7 +7,7 @@
 
 module Outcome_NB
 
-export compute_MuWE!, loglikelihood, compute_logdispersion_derivatives, update_logdispersions
+export compute_MuWE!, compute_MuWE, loglikelihood, compute_logdispersion_derivatives, update_logdispersions
 
 using Statistics: mean
 using SpecialFunctions: logabsgamma, digamma, trigamma
@@ -19,6 +19,16 @@ function compute_MuWE!(Mu,W,E,Y,logMu,r)
     Mu .= exp.(logMu)
     W .= (r.*Mu)./(r.+Mu)
     E .= (Y - Mu).*(W./Mu)
+end
+
+
+function compute_MuWE(Y,logMu,r)
+    I,J = size(Y)
+    Mu = zeros(I,J)
+    W = zeros(I,J)
+    E = zeros(I,J)
+    compute_MuWE!(Mu,W,E,Y,logMu,r)
+    return Mu,W,E
 end
 
 
