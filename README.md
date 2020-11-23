@@ -29,7 +29,7 @@ Pkg.add(url="https://github.com/jwmi/BilinearModels.jl")
 If you have a question or find a bug, feel free to contact me ([Jeff Miller](http://jwmi.github.io/)). Also feel free to submit a pull request if you find and fix a bug.
 
 
-## Licensing / Citation
+## Licensing
 
 This package is released under the MIT "Expat" license. See [LICENSE.md](LICENSE.md). 
 

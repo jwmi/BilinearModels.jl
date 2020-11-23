@@ -23,7 +23,7 @@ block(i,K) = ((i-1)*K+1):(i*K)
 
 # _________________________________________________________________________________________________
 
-# Compute standard errors for estimates of the parameters (A,B,C,D,U,V,S,T,omega) of a Negative-Binomial generalized bilinear model (NB-GBM).
+# Compute standard errors for estimates of the parameters of a Negative-Binomial generalized bilinear model (NB-GBM).
 #
 # INPUTS:
 #    Y, X, Z, A, B, C, D, U, V, S, T, and omega (see gbm_estimation for parameter descriptions).
@@ -32,7 +32,6 @@ block(i,K) = ((i-1)*K+1):(i*K)
 #    se_A = J-by-K matrix of (approximate) standard errors for A estimates
 #    se_B = I-by-L matrix of (approximate) standard errors for B estimates
 #    se_C = K-by-L matrix of (approximate) standard errors for C estimates
-#    se_D = M-by-1 vector of (approximate) standard errors for D estimates
 #    se_U = I-by-M matrix of (approximate) standard errors for U estimates
 #    se_V = J-by-M matrix of (approximate) standard errors for V estimates
 #    se_S = I-by-1 matrix of (approximate) standard errors for S estimates
@@ -251,7 +250,7 @@ function infer(Y,X,Z,A,B,C,D,U,V,S,T,omega; prior=Prior(), Offset=0.0*Y)
     if any(isnan.(se_S)); @warn("One or more invalid standard errors in se_S."); end
     if any(isnan.(se_T)); @warn("One or more invalid standard errors in se_T."); end
     
-    return se_A,se_B,se_C,se_D,se_U,se_V,se_S,se_T
+    return se_A,se_B,se_C,se_U,se_V,se_S,se_T
 end
 
 

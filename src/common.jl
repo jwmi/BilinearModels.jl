@@ -11,7 +11,6 @@ export SS, logprior, Prior, validate_inputs, validate_outputs, sum_of_squares, r
 
 using Distributions
 import PROPACK
-using LinearAlgebra: svdvals
 import LinearAlgebra
 Identity = LinearAlgebra.I
 
@@ -32,6 +31,8 @@ function tsvd(A; k=1, trynum=1, maxtries=5)
     end
     return U,D,V
 end
+
+minsvdval(A) = PROPACK.tsvdvals(A; k=size(A,2))[1][end]
 
 
 # Sum of squares
@@ -78,8 +79,8 @@ function validate_inputs(Y,X,Z,M)
     @assert(all(Z[:,1].==1), "The first column of Z must be all ones.")
     if K>1; @assert(maximum(abs.(sum(X[:,2:end],dims=1))) < 1e-10, "Except for column 1, the columns of X must sum to zero."); end
     if L>1; @assert(maximum(abs.(sum(Z[:,2:end],dims=1))) < 1e-10, "Except for column 1, the columns of Z must sum to zero."); end
-    @assert(minimum(svdvals(X)) > 0, "X must be full rank, that is, X'*X must be invertible.")
-    @assert(minimum(svdvals(Z)) > 0, "Z must be full rank, that is, Z'*Z must be invertible.")
+    @assert(minsvdval(X) > 0, "X must be full rank, that is, X'*X must be invertible.")
+    @assert(minsvdval(Z) > 0, "Z must be full rank, that is, Z'*Z must be invertible.")
 end
 
 
@@ -119,11 +120,11 @@ function residuals(Y,X,Z,A,B,C,D,U,V,S,T,omega; rx=[], rz=[], ru=[])
     logMu = X*A' + B*Z' + X*C*Z' + U*(D.*V')
     logMu_retain = X[:,rx]*A[:,rx]' + B[:,rz]*Z[:,rz]' + X[:,rx]*C[rx,rz]*Z[:,rz]' + U[:,ru]*(D[ru].*V[:,ru]')
     Eps = log.(Y .+ 0.125) .- logMu
-    Eps_R = logMu_retain .+ Eps
+    Eps = logMu_retain .+ Eps
     r = exp.(-(S .+ T' .+ omega))
     Mu,W,E = compute_MuWE(Y,logMu,r)
-    Sigma = 1.0./sqrt.(W)
-    return Eps_R,Sigma
+    Sigma_Eps = 1.0./sqrt.(W)
+    return Eps,Sigma_Eps
 end
 
 

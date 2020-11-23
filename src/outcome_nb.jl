@@ -78,7 +78,7 @@ function update_logdispersions(S,T,omega,Y,Mu,r,p,max_step,b_S,b_T,update_S,upda
     h = vec(sum(D2; dims=2)) .- p.lambda_S
     delta = (g./h).*(h.<0) .+ (-g).*(h.>=0)
     S = S - delta.*min.(b_S./abs.(delta), 1)
-    if any(abs.(delta) .> b_S) && verbose; println("max step size enforced in S[i] update for one or more i."); end
+    if any(abs.(delta) .> b_S) && verbose; println(" max step size enforced in S[i] update for one or more i."); end
     b_S = [(abs(delta[i]) > b_S[i] ?  b_S[i]/2 : max_step) for i = 1:I]
     shift = log(mean(exp.(S)))
     S = S .- shift  # Project onto constrained space
@@ -93,7 +93,7 @@ function update_logdispersions(S,T,omega,Y,Mu,r,p,max_step,b_S,b_T,update_S,upda
     h = vec(sum(D2; dims=1)) .- p.lambda_T
     delta = (g./h).*(h.<0) .+ (-g).*(h.>=0)
     T = T - delta.*min.(b_T./abs.(delta), 1)
-    if any(abs.(delta) .> b_T) && verbose; println("max step size enforced in T[j] update for one or more j."); end
+    if any(abs.(delta) .> b_T) && verbose; println(" max step size enforced in T[j] update for one or more j."); end
     b_T = [(abs(delta[j]) > b_T[j] ?  b_T[j]/2 : max_step) for j = 1:J]
     shift = log(mean(exp.(T)))
     T = T .- shift  # Project onto constrained space

@@ -189,6 +189,8 @@ function fit(Y,X,Z,M; max_iterations=50, tolerance=1e-6, max_step=5.0, verbose=t
     # Check constraints
     validate_outputs(Y,X,Z,A,B,C,D,U,V,S,T)
     
+    if verbose; println("Finished."); end
+    
     return A,B,C,D,U,V,S,T,omega,logp
 end
 
@@ -249,7 +251,7 @@ function update_main_effects(A,C,X,Z,W,E,lambda,max_step,verbose)
         A[j,:] = A[j,:] + delta*min(sqrt(size(A,2))*max_step/norm(delta), 1)
         if sqrt(size(A,2))*max_step < norm(delta); max_step_enforced = true; end
     end
-    if max_step_enforced && verbose; println("max_step enforced in A[j,:] update for one or more j."); end
+    if max_step_enforced && verbose; println(" max step size enforced in A[j,:] update for one or more j."); end
     Shift = pinv(Z)*A
     A = A - Z*Shift  # enforce constraint that Z'*A = 0 by projecting onto nullspace of Z'.
     C = C + Shift'  # compensate to preserve likelihood
@@ -280,7 +282,7 @@ function update_UD(A,C,U,D,V,X,Z,pinv_X,pinv_Z,W,E,lambda_U,max_step,verbose)
         G[i,:] = G[i,:] + delta*min(sqrt(M)*max_step/norm(delta), 1)
         if sqrt(M)*max_step < norm(delta); max_step_enforced = true; end
     end
-    if max_step_enforced && verbose; println("max_step enforced in G[i,:] update for one or more i."); end
+    if max_step_enforced && verbose; println(" max step size enforced in G[i,:] update for one or more i."); end
     pinv_X_G = pinv_X*G
     Go = G - X*pinv_X_G
     Ao = A + V*pinv_X_G'

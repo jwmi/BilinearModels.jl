@@ -58,7 +58,7 @@ end
     
     @testset "infer 3x3 M=0" begin
         A,B,C,D,U,V,S,T,omega,logp = GBM.fit(Y,X,Z,0; verbose=false)
-        se_A,se_B,se_C,se_D,se_U,se_V,se_S,se_T = GBM.infer(Y,X,Z,A,B,C,D,U,V,S,T,omega)
+        se_A,se_B,se_C,se_U,se_V,se_S,se_T = GBM.infer(Y,X,Z,A,B,C,D,U,V,S,T,omega)
         se_A0 = reshape([0.37311, 0.34465, 0.44011],J,1)
         se_B0 = reshape([0.42922, 0.3305, 0.4022],I,1)
         se_C0 = reshape([0.39282],1,1)
