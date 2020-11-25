@@ -1,8 +1,6 @@
 # Estimation algorithm for generalized bilinear model (GBM) with g(E(Y)) = XA' + BZ' + XCZ' + UDV'.
 #
-# Author: Jeffrey W. Miller
-# Date: 11/4/2020
-#
+# Copyright (c) 2020: Jeffrey W. Miller.
 # This file is released under the MIT "Expat" License.
 
 module Fit

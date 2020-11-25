@@ -1,8 +1,6 @@
 # Unit tests for GBM functions
 #
-# Author: Jeffrey W. Miller
-# Date: 11/7/2020
-#
+# Copyright (c) 2020: Jeffrey W. Miller.
 # This file is released under the MIT "Expat" License.
 
 using Test

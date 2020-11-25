@@ -1,8 +1,6 @@
 # Functions for negative binomial outcome model in GBM.
 #
-# Author: Jeffrey W. Miller
-# Date: 11/4/2020
-#
+# Copyright (c) 2020: Jeffrey W. Miller.
 # This file is released under the MIT "Expat" License.
 
 module Outcome_NB
