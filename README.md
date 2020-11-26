@@ -17,7 +17,7 @@ Please cite the following publication if you use this package in your research:
 - Install [Julia](http://julialang.org/downloads/).
 
 - Start Julia and run the following command at the `julia>` prompt:
-```
+```julia
 using Pkg; Pkg.add(url="https://github.com/jwmi/BilinearModels.jl")
 ```
 
@@ -26,7 +26,7 @@ using Pkg; Pkg.add(url="https://github.com/jwmi/BilinearModels.jl")
 
 At the `julia>` prompt:
 
-```
+```julia
 using BilinearModels
 
 Y = [1 2 3; 4 5 6; 7 8 0]  # toy data matrix
