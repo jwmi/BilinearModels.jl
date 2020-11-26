@@ -50,9 +50,9 @@ A tutorial is provided in the [Jupyter notebook here](https://nbviewer.jupyter.o
 Or, for a simple HTML rendering of the tutorial, [see here](http://jwmi.github.io/software/BilinearModels-tutorial.html).
 
 
-## Questions, issues, or bugs
+## Questions and issues
 
-Please feel free to post any [issues here](issues), or submit a [pull request](pulls) if you make improvements to the code.
+Please feel free to post any [issues here](https://github.com/jwmi/BilinearModels.jl/issues), or submit a [pull request](https://github.com/jwmi/BilinearModels.jl/pulls) if you make improvements to the code.
 For general questions, feel free to contact me ([Jeff Miller](http://jwmi.github.io/)).
 
 
