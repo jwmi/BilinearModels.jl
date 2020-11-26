@@ -22,6 +22,28 @@ using Pkg; Pkg.add(url="https://github.com/jwmi/BilinearModels.jl")
 ```
 
 
+## Quick start
+
+At the `julia>` prompt:
+
+```
+using BilinearModels
+
+Y = [1 2 3; 4 5 6; 7 8 0]  # toy data matrix
+I,J = size(Y)              # dimensions of Y
+X = ones(I,1)              # feature covariate matrix
+Z = ones(J,1)              # sample covariate matrix
+M = 0                      # number of latent factors
+
+# fit the model
+A,B,C,D,U,V,S,T,omega,logp = BilinearModels.fit(Y,X,Z,M)  
+
+# compute standard errors
+se_A,se_B,se_C,se_U,se_V,se_S,se_T = BilinearModels.infer(Y,X,Z,A,B,C,D,U,V,S,T,omega)
+
+```
+
+
 ## Tutorial
 
 A tutorial is provided in the [Jupyter notebook here](https://nbviewer.jupyter.org/github/jwmi/BilinearModelsExamples/blob/main/tutorial/Tutorial%20for%20BilinearModels%20package.ipynb).
